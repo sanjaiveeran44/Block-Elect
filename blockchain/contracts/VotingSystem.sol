@@ -8,7 +8,7 @@ contract VotingSystem {
     constructor() {
         admin = msg.sender;
     }
-}
+
 
     struct Candidate {
         uint256 id;
@@ -47,3 +47,83 @@ contract VotingSystem {
         require(_electionId > 0 && _electionId <= electionCount, "Election does not exist");
         _;
     }
+
+        function createElection(string memory _title, string memory _description, bool _useWhitelist)
+        external
+        onlyAdmin
+        returns (uint256 newElectionId)
+    {
+        electionCount++;
+        Election storage e = elections[electionCount];
+        e.id = electionCount;
+        e.title = _title;
+        e.description = _description;
+        e.useWhitelist = _useWhitelist;
+        emit ElectionCreated(electionCount, _title);
+        return electionCount;
+    }
+
+    function addCandidate(uint256 _electionId, string memory _name)
+        external
+        onlyAdmin
+        electionExists(_electionId)
+    {
+        Election storage e = elections[_electionId];
+        e.candidateCount++;
+        uint256 cid = e.candidateCount;
+        e.candidates[cid] = Candidate(cid, _name, 0);
+        e.candidateIds.push(cid);
+        emit CandidateAdded(_electionId, cid, _name);
+    }
+
+    function startElection(uint256 _electionId) external onlyAdmin electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(!e.active, "Already active");
+        e.active = true;
+        emit ElectionStarted(_electionId);
+    }
+
+    function endElection(uint256 _electionId) external onlyAdmin electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(e.active, "Not active");
+        e.active = false;
+        emit ElectionEnded(_electionId);
+    }
+
+    function vote(uint256 _electionId, uint256 _candidateId) external electionExists(_electionId) {
+        Election storage e = elections[_electionId];
+        require(e.active, "Election not active");
+        require(_candidateId > 0 && _candidateId <= e.candidateCount, "Invalid candidate");
+        require(!e.hasVoted[msg.sender], "Already voted");
+
+        if (e.useWhitelist) {
+            require(e.whitelist[msg.sender], "Not whitelisted");
+        }
+
+        e.candidates[_candidateId].voteCount++;
+        e.hasVoted[msg.sender] = true;
+
+        emit Voted(_electionId, _candidateId, msg.sender);
+    }
+
+    function getCandidate(uint256 _electionId, uint256 _candidateId)
+        external
+        view
+        electionExists(_electionId)
+        returns (uint256, string memory, uint256)
+    {
+        Candidate storage c = elections[_electionId].candidates[_candidateId];
+        return (c.id, c.name, c.voteCount);
+    }
+
+    function getElection(uint256 _electionId)
+        external
+        view
+        electionExists(_electionId)
+        returns (uint256, string memory, string memory, bool, uint256)
+    {
+        Election storage e = elections[_electionId];
+        return (e.id, e.title, e.description, e.active, e.candidateCount);
+    }
+}
+
