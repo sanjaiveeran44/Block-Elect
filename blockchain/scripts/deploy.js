@@ -1,20 +1,11 @@
 const hre = require("hardhat");
 
 async function main() {
-  // Get contract factory
-  const VotingSystem = await hre.ethers.getContractFactory("VotingSystem");
-
-  // Deploy contract
-  const voting = await VotingSystem.deploy();
-
-  // Wait for deployment
-  await voting.waitForDeployment();
+  const Voting = await hre.ethers.getContractFactory("VotingSystem");
+  const voting = await Voting.deploy();
 
   console.log("VotingSystem deployed to:", voting.target);
-
-  // Optional: log admin address
-  const admin = await voting.admin();
-  console.log("Admin address:", admin);
+  console.log("Admin address:", (await hre.ethers.getSigners())[0].address);
 }
 
 main().catch((error) => {
