@@ -1,83 +1,49 @@
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
 contract VotingSystem {
     address public admin;
-    uint public candidateCount = 0;
-    uint public sessionCount = 0;
-
-    struct Candidate {
-        uint id;
-        string name;
-        uint votes;
-    }
-
-    struct VotingSession {
-        uint id;
-        string name;
-        uint[] candidateIds;
-        bool active;
-        mapping(uint => Candidate) candidates;
-    }
-
-    mapping(uint => VotingSession) public sessions;
-
-    mapping(uint => mapping(address => bool)) public hasVoted; // sessionId => voter => bool
+    uint256 public electionCount;
 
     constructor() {
         admin = msg.sender;
     }
+}
+
+    struct Candidate {
+        uint256 id;
+        string name;
+        uint256 voteCount;
+    }
+
+    struct Election {
+        uint256 id;
+        string title;
+        string description;
+        bool active;
+        uint256 candidateCount;
+        mapping(uint256 => Candidate) candidates;
+        uint256[] candidateIds;
+        mapping(address => bool) hasVoted;
+        mapping(address => bool) whitelist;
+        bool useWhitelist;
+    }
+
+    mapping(uint256 => Election) private elections;
+
+    event ElectionCreated(uint256 indexed electionId, string title);
+    event CandidateAdded(uint256 indexed electionId, uint256 indexed candidateId, string name);
+    event ElectionStarted(uint256 indexed electionId);
+    event ElectionEnded(uint256 indexed electionId);
+    event VoterWhitelisted(uint256 indexed electionId, address indexed voter);
+    event Voted(uint256 indexed electionId, uint256 indexed candidateId, address indexed voter);
 
     modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin can perform this action");
+        require(msg.sender == admin, "Only admin");
         _;
     }
 
-    // Admin creates a new voting session
-    function createSession(string memory sessionName) public onlyAdmin {
-        sessionCount++;
-        VotingSession storage s = sessions[sessionCount];
-        s.id = sessionCount;
-        s.name = sessionName;
-        s.active = false;
+    modifier electionExists(uint256 _electionId) {
+        require(_electionId > 0 && _electionId <= electionCount, "Election does not exist");
+        _;
     }
-
-    // Admin adds candidate to a session
-    function addCandidate(uint sessionId, string memory candidateName) public onlyAdmin {
-        require(sessionId <= sessionCount && sessionId > 0, "Invalid session");
-        VotingSession storage s = sessions[sessionId];
-        candidateCount++;
-        s.candidateIds.push(candidateCount);
-        s.candidates[candidateCount] = Candidate(candidateCount, candidateName, 0);
-    }
-
-    // Admin starts a voting session
-    function startSession(uint sessionId) public onlyAdmin {
-        sessions[sessionId].active = true;
-    }
-
-    // Admin ends a voting session
-    function endSession(uint sessionId) public onlyAdmin {
-        sessions[sessionId].active = false;
-    }
-
-    // Contestants vote
-    function vote(uint sessionId, uint candidateId) public {
-        VotingSession storage s = sessions[sessionId];
-        require(s.active, "Voting not active");
-        require(!hasVoted[sessionId][msg.sender], "You already voted");
-        s.candidates[candidateId].votes++;
-        hasVoted[sessionId][msg.sender] = true;
-    }
-
-    // Get candidate details
-    function getCandidate(uint sessionId, uint candidateId) public view returns (string memory, uint) {
-        Candidate storage c = sessions[sessionId].candidates[candidateId];
-        return (c.name, c.votes);
-    }
-
-    // Get all candidate IDs for a session
-    function getCandidateIds(uint sessionId) public view returns (uint[] memory) {
-        return sessions[sessionId].candidateIds;
-    }
-}
