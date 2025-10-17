@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@400;600&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: radial-gradient(circle at center, #0b0014, #000);
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  color: #fff;
+}
+
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background glowing particles */
+.particles, .particles2 {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle, rgba(128,0,255,0.2) 0%, transparent 60%);
+  animation: pulse 6s infinite ease-in-out alternate;
+  z-index: 0;
+  filter: blur(60px);
+}
+
+.particles2 {
+  animation-delay: 3s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.5); opacity: 0.3; }
+}
+
+.landing-content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+}
+
+.landing-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  text-shadow: 0 0 15px #a100ff, 0 0 25px #8000ff;
+}
+
+.title-subtitle {
+  display: block;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  color: #b366ff;
+  letter-spacing: 1px;
+}
+
+.landing-description {
+  margin: 1rem auto;
+  font-size: 1.1rem;
+  max-width: 600px;
+  color: #ccc;
+}
+
+/* Neon buttons */
+.connect-wallet-btn, .home-btn {
+  background: transparent;
+  border: 2px solid #a100ff;
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  margin-top: 20px;
+}
+
+.connect-wallet-btn:hover, .home-btn:hover {
+  background: #a100ff;
+  box-shadow: 0 0 20px #a100ff, 0 0 40px #8000ff;
+}
+
+.btn-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(160, 0, 255, 0.3), transparent 70%);
+  top: 0;
+  left: 0;
+  z-index: -1;
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
+}
+
+/* Connected wallet section */
+.connected-section {
+  margin-top: 1.5rem;
+}
+
+.wallet-address {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #8000ff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  color: #b366ff;
+  margin-bottom: 10px;
+}
+
+/* Features section */
+.features {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #d1a9ff;
+  font-size: 1rem;
+  text-shadow: 0 0 8px #8000ff;
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: scale(1.1);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: #a100ff;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .landing-title {
+    font-size: 2rem;
+  }
+  .landing-description {
+    font-size: 1rem;
+  }
+  .connect-wallet-btn, .home-btn {
+    padding: 10px 20px;
+  }
+}
