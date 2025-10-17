@@ -1,11 +1,19 @@
-node_modules
+# Node modules
+node_modules/
 .env
-coverage
-coverage.json
-typechain
-typechain-types
 
 # Hardhat files
-cache
-artifacts
+cache/
+artifacts/
 
+# OS and editor files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment and build files
+.env.local
+dist/
+build/
