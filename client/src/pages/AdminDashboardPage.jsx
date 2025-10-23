@@ -7,7 +7,7 @@ const AdminDashboardPage = () => {
   const { account, connectWallet } = useContext(WalletContext);
   const navigate = useNavigate();
 
-  const [adminAddress, setAdminAddress] = useState('0x1234567890abcdef1234567890abcdef12345678'); // Replace later from contract
+  const [adminAddress, setAdminAddress] = useState('0x1234567890abcdef1234567890abcdef12345678'); 
   const [elections, setElections] = useState([
     { id: 1, title: 'Presidential Election', description: 'Vote for your next president', status: 'Active' },
     { id: 2, title: 'Class Representative', description: 'Select your CR', status: 'Ended' },

@@ -4,24 +4,39 @@ import { WalletContext } from '../context/WalletContext.jsx';
 import './LandingPage.css';
 
 const LandingPage = () => {
-  const { account, connectWallet } = useContext(WalletContext);
   const navigate = useNavigate();
+  const { account, connectWallet } = useContext(WalletContext);
 
   const handleConnectWallet = async () => {
-    await connectWallet();
+    const account = await connectWallet();
+    if (account) {
+      
+      if (account.toLowerCase() === (isAdmin ? account.toLowerCase() : account.toLowerCase()) && isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
+    }
+    
   };
 
   const handleGoToHome = () => {
-    navigate('/home');
-  };
+   
+  };  
 
   const shortenAddress = (address) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
+  
+  if(account){
+    return (
+      <h1>account connected</h1>
+    )
+  }
   return (
+    
     <div className="landing-container">
-      <div className="particles"></div>
       <div className="particles2"></div>
       
       <div className="landing-content">

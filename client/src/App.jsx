@@ -11,9 +11,9 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 function App() {
   return (
     <Routes>
-      {/* <Route path="/" element={<LandingPage />} /> */}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/register" element={<RegistrationPage />} />
-      <Route path="/" element={<AdminDashboardPage />} />
+      <Route path="/dashboard" element={<AdminDashboardPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/election/:id" element={<ElectionDetailPage />} />
       <Route path="/results" element={<ResultsPage />} />
