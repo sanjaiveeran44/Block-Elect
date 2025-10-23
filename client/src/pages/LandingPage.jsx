@@ -5,19 +5,21 @@ import './LandingPage.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const { account, connectWallet } = useContext(WalletContext);
+  const { account, connectWallet, isAdmin } = useContext(WalletContext);
 
   const handleConnectWallet = async () => {
-    const account = await connectWallet();
-    if (account) {
+    const selected = await connectWallet();
+    if (selected) {
+      console.log(selected.toLowerCase())
+      console.log(account.toLowerCase())
       
-      if (account.toLowerCase() === (isAdmin ? account.toLowerCase() : account.toLowerCase()) && isAdmin) {
+      if (selected.toLowerCase() === (isAdmin ? selected.toLowerCase() : selected.toLowerCase()) && isAdmin) {
         navigate("/admin");
       } else {
         navigate("/user");
+        console.log("User connected");
       }
     }
-    
   };
 
   const handleGoToHome = () => {
@@ -29,11 +31,6 @@ const LandingPage = () => {
   };
 
   
-  if(account){
-    return (
-      <h1>account connected</h1>
-    )
-  }
   return (
     
     <div className="landing-container">
@@ -49,24 +46,11 @@ const LandingPage = () => {
           Secure, Transparent, and Immutable Voting on the Blockchain
         </p>
 
-        {!account ? (
           <button className="connect-wallet-btn" onClick={handleConnectWallet}>
             <span className="btn-content">Connect Wallet</span>
             <span className="btn-glow"></span>
           </button>
-        ) : (
-          <div className="connected-section">
-            <div className="wallet-address">
-              <span className="address-label">Connected:</span>
-              <span className="address-value">{shortenAddress(account)}</span>
-            </div>
-            <button className="home-btn" onClick={handleGoToHome}>
-              <span className="btn-content">Go to Home</span>
-              <span className="btn-glow"></span>
-            </button>
-          </div>
-        )}
-
+       
         <div className="features">
           <div className="feature-item">
             <div className="feature-icon">🔒</div>

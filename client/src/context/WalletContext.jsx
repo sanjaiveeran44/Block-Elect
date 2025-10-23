@@ -8,8 +8,6 @@ const ADMIN_ADDRESS = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266".toLowerCase()
 
 export const WalletProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
-
-  
   const connectWallet = useCallback(async () => {
     if (!window.ethereum) {
       alert("MetaMask not detected. Please install MetaMask and connect to localhost:8545.");
