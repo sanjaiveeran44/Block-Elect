@@ -150,3 +150,15 @@ export const getVotersForCandidate = async (req, res) => {
     res.status(500).json({ success: false, message: error.message, data: null });
   }
 };
+
+const deleteElection = async (req,res) =>{
+  try{
+    const {electionId} = req.params;
+    const tx = await contract.deleteElection(electionId);
+    const receipt = await tx.wait();
+    res.json({success: true, message: "Election deleted", data: {txHash: receipt.transactionHash}});
+  }catch(error){
+    console.error("deleteElection error:", error);
+    res.status(500).json({ success: false, message: error.message, data: null });
+  }
+}

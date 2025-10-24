@@ -7,7 +7,8 @@ import {
     startElection,
     endElection,
     getAllCandidates,
-    getVotersForCandidate
+    getVotersForCandidate,
+    deleteElection
 } from '../controllers/electionController.js'
 
 const router = express.Router();
@@ -22,5 +23,7 @@ router.post("/elections/:id/candidates", addCandidate);
 
 router.put("/elections/:id/start", startElection);
 router.put("/elections/:id/end", endElection);
+
+router.delete("/elections/:id", deleteElection);
 
 export default router;
