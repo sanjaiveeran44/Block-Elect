@@ -9,7 +9,6 @@ contract VotingSystem {
         admin = msg.sender;
     }
 
-
     struct Candidate {
         uint256 id;
         string name;
@@ -24,13 +23,19 @@ contract VotingSystem {
         uint256 candidateCount;
         mapping(uint256 => Candidate) candidates;
         uint256[] candidateIds;
+
+     
         mapping(address => bool) hasVoted;
         mapping(address => bool) whitelist;
         bool useWhitelist;
+
+        
+        mapping(uint256 => address[]) candidateVoters;
     }
 
     mapping(uint256 => Election) private elections;
 
+    
     event ElectionCreated(uint256 indexed electionId, string title);
     event CandidateAdded(uint256 indexed electionId, uint256 indexed candidateId, string name);
     event ElectionStarted(uint256 indexed electionId);
@@ -38,6 +43,7 @@ contract VotingSystem {
     event VoterWhitelisted(uint256 indexed electionId, address indexed voter);
     event Voted(uint256 indexed electionId, uint256 indexed candidateId, address indexed voter);
 
+   
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only admin");
         _;
@@ -48,7 +54,8 @@ contract VotingSystem {
         _;
     }
 
-        function createElection(string memory _title, string memory _description, bool _useWhitelist)
+   
+    function createElection(string memory _title, string memory _description, bool _useWhitelist)
         external
         onlyAdmin
         returns (uint256 newElectionId)
@@ -90,6 +97,7 @@ contract VotingSystem {
         emit ElectionEnded(_electionId);
     }
 
+    
     function vote(uint256 _electionId, uint256 _candidateId) external electionExists(_electionId) {
         Election storage e = elections[_electionId];
         require(e.active, "Election not active");
@@ -103,9 +111,13 @@ contract VotingSystem {
         e.candidates[_candidateId].voteCount++;
         e.hasVoted[msg.sender] = true;
 
+        // 🔥 NEW: store voter address for this candidate
+        e.candidateVoters[_candidateId].push(msg.sender);
+
         emit Voted(_electionId, _candidateId, msg.sender);
     }
 
+    
     function getCandidate(uint256 _electionId, uint256 _candidateId)
         external
         view
@@ -125,5 +137,30 @@ contract VotingSystem {
         Election storage e = elections[_electionId];
         return (e.id, e.title, e.description, e.active, e.candidateCount);
     }
-}
 
+   
+    function getAllCandidates(uint256 _electionId)
+        external
+        view
+        electionExists(_electionId)
+        returns (Candidate[] memory)
+    {
+        Election storage e = elections[_electionId];
+        Candidate[] memory result = new Candidate[](e.candidateCount);
+        for (uint256 i = 0; i < e.candidateCount; i++) {
+            result[i] = e.candidates[e.candidateIds[i]];
+        }
+        return result;
+    }
+
+    
+    function getVotersForCandidate(uint256 _electionId, uint256 _candidateId)
+        external
+        view
+        electionExists(_electionId)
+        returns (address[] memory)
+    {
+        Election storage e = elections[_electionId];
+        return e.candidateVoters[_candidateId];
+    }
+}
