@@ -1,20 +1,54 @@
+import React from 'react';
+import AdminHeader from '../components/admin/AdminHeader';
+import AdminHero from '../components/admin/AdminHero';
 
-import React, { useContext } from "react";
-import { WalletContext } from "../context/WalletContext";
+function AdminDashboard() {
 
-const AdminDashboard = () => {
-  const { account } = useContext(WalletContext);
+  const adminAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+  const handleLogout = () => {
+    console.log("Logout clicked");
+  };
 
-  return (
-    <div style={{ padding: 30, minHeight: "100vh", background: "#0b0014", color: "#fff" }}>
-      <h1>Admin Dashboard</h1>
-      <p><strong>Connected admin address:</strong></p>
-      <pre style={{ background: "rgba(255,255,255,0.03)", padding: 12, borderRadius: 8 }}>
-        {account || "No account connected"}
-      </pre>
-      <p style={{ opacity: 0.8, marginTop: 16 }}>For now we just print the address. Admin actions come next.</p>
+  const sampleElections = [
+  {
+    id: 1,
+    title: "Student Council Election",
+    startDate: "2025-10-10",
+    endDate: "2025-10-20",
+    active: true,
+  },
+  {
+    id: 2,
+    title: "Tech Lead Selection",
+    startDate: "2025-09-01",
+    endDate: "2025-09-05",
+    active: false,
+  },
+];
+
+  const handleView = (electionId) => {
+    console.log("View clicked for election:", electionId);
+  };
+
+  const handleRemove = (electionId) => {
+    console.log("Remove clicked for election:", electionId);
+  };
+
+  const handleCreate = (newElection) => {
+    console.log("Create clicked with data:", newElection);
+  };
+
+  return(
+    <div>
+        <AdminHeader adminAddress={adminAddress} onLogout={handleLogout} />
+        <AdminHero
+        elections={sampleElections}
+        onView={handleView}
+        onRemove={handleRemove}
+        onCreate={handleCreate}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default AdminDashboard;
+export default AdminDashboard

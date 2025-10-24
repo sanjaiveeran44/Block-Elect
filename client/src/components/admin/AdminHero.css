@@ -1,0 +1,157 @@
+.admin-hero {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 10px;
+  margin: 20px auto;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.hero-title {
+  font-size: 1.4rem;
+  color: #1976d2;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.election-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.election-table th {
+  background: #f1f5f9;
+  color: #333;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.election-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #444;
+}
+
+.status-active {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-ended {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.3s;
+}
+
+.view-btn:hover {
+  background: #dc2626;
+}
+
+.remove-btn {
+  background: #e2e8f0;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #444;
+  transition: 0.3s;
+}
+
+.remove-btn:hover {
+  background: #f87171;
+  color: white;
+}
+
+.create-btn-wrapper {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.create-election-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.create-election-btn:hover {
+  background: #15803d;
+}
+
+/* FORM STYLES */
+.create-election-form {
+  margin-top: 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.create-election-form h4 {
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+.create-election-form input,
+.create-election-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+}
+
+.date-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submit-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
