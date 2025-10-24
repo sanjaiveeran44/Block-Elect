@@ -37,6 +37,7 @@ contract VotingSystem {
 
     
     event ElectionCreated(uint256 indexed electionId, string title);
+    event ElectionDeleted(uint256 indexed electionId);
     event CandidateAdded(uint256 indexed electionId, uint256 indexed candidateId, string name);
     event ElectionStarted(uint256 indexed electionId);
     event ElectionEnded(uint256 indexed electionId);
@@ -162,5 +163,10 @@ contract VotingSystem {
     {
         Election storage e = elections[_electionId];
         return e.candidateVoters[_candidateId];
+    }
+
+    function deleteElection(uint256 _electionId) external onlyAdmin electionExists(_electionId) {
+        delete elections[_electionId];
+        emit ElectionDeleted(_electionId);
     }
 }
