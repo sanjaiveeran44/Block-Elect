@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AdminHero.css";
 import { FaTrash, FaEye } from "react-icons/fa";
+import axios from "axios";
 
-const AdminHero = ({ elections, onView, onRemove, onCreate }) => {
+const AdminHero = () => {
   const [showForm, setShowForm] = useState(false);
   const [newElection, setNewElection] = useState({
     title: "",
@@ -10,10 +11,46 @@ const AdminHero = ({ elections, onView, onRemove, onCreate }) => {
     startDate: "",
     endDate: "",
   });
+  const [elections, setElections] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const fetchElection = async () =>{
+      try{
+          setLoading(true);
+          const response = await axios.get("http://localhost:5000/api/elections")
+          setElections(response.data)
+      }
+      catch(error){
+          console.log(error)
+      }
+      finally{
+          setLoading(false);
+      }
+  }
+  useEffect(
+    () =>{
+        fetchElection();
+    }
+  )
+
+  const handleView = (electionId) => {
+    console.log("View clicked for election:", electionId);
+  };
+
+  const handleRemove = async(electionId) => {
+    await axios.delete("http://localhost:5000/api/elections/" + electionId);
+    fetchElection();
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onCreate(newElection);
+    await axios.post("http://localhost:5000/api/elections", newElection)
+    .then((response) => {
+        console.log(response.data)
+    })
+    .catch((error) => {
+        console.log(error)
+    })
     setNewElection({ title: "", description: "", startDate: "", endDate: "" });
     setShowForm(false);
   };
@@ -33,7 +70,13 @@ const AdminHero = ({ elections, onView, onRemove, onCreate }) => {
           </tr>
         </thead>
         <tbody>
-          {elections && elections.length > 0 ? (
+          {loading ? (
+            <tr>
+              <td colSpan="5" className="no-data">
+                Loading...
+              </td>
+            </tr>
+          ) : elections && elections.length > 0 ? (
             elections.map((election, idx) => (
               <tr key={idx}>
                 <td>{election.title}</td>
@@ -49,13 +92,13 @@ const AdminHero = ({ elections, onView, onRemove, onCreate }) => {
                 <td className="action-buttons">
                   <button
                     className="view-btn"
-                    onClick={() => onView(election.id)}
+                    onClick={() => handleView(election.id)}
                   >
                     <FaEye /> View
                   </button>
                   <button
                     className="remove-btn"
-                    onClick={() => onRemove(election.id)}
+                    onClick={() => handleRemove(election.id)}
                   >
                     <FaTrash />
                   </button>
