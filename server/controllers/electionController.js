@@ -1,5 +1,4 @@
-import {contract} from "../config/contract"
-import ethers from "ethers"
+import { contract } from "../config/contract.js"
 
 const parseElection = (election) =>{
   return {
@@ -18,23 +17,36 @@ const parseCandidate = (candidate) =>{
     voteCount: candidate[2].toString()
   }
 }
-
-const getAllElections = async (req,res) => {
+export const getAllElections = async (req, res) => {
   try {
-    const electionCount = await contract.getElectionCount()
-    const elections = []
-    for(let i = 1;i <= electionCount;i++){
-      const election = await contract.getElection(i);
-      elections.push(parseElection(election))
-    }
-    return res.status(200).json({success: true, message: "Elections fetched successfully", data: elections});
+    
+    console.log('hello');
+    const elections = await contract.getAllElections();
+    console.log(elections);
+  
+    const parsedElections = elections.map(election => ({
+      id: election.id.toString(),
+      title: election.title,
+      description: election.description,
+      active: election.active,
+      candidateCount: election.candidateCount.toString()
+    }));
+
+    return res.status(200).json({
+      success: true, 
+      message: "Elections fetched successfully", 
+      data: parsedElections
+    });
 
   } catch (error) {
-    return res.status(500).json({success :false, message: error.message});
+    return res.status(500).json({
+      success: false, 
+      message: "unable to load elections"
+    });
   }
 }
 
-const getElectionById = async (req, res) => {
+export const getElectionById = async (req, res) => {
   const {id} = req.params;
   const candidates = [];
   const election = await contract.getElection(id);
@@ -52,7 +64,7 @@ const getElectionById = async (req, res) => {
   }
 }
 
-const createElection = async (req, res) =>{
+export const createElection = async (req, res) =>{
   const {title, description, useWhitelist} = req.body;
 
   try{
@@ -74,7 +86,7 @@ const createElection = async (req, res) =>{
   }
 };
 
-const addCandidate = async (req, res) => {
+export const addCandidate = async (req, res) => {
   try {
     const { electionId } = req.params;
     const { name } = req.body;
@@ -90,7 +102,7 @@ const addCandidate = async (req, res) => {
   }
 };
 
-const startElection = async (req, res) =>{
+export const startElection = async (req, res) =>{
   try {
     const { electionId } = req.params;
     const tx = await contract.startElection(electionId);
@@ -151,7 +163,7 @@ export const getVotersForCandidate = async (req, res) => {
   }
 };
 
-const deleteElection = async (req,res) =>{
+export const deleteElection = async (req,res) =>{
   try{
     const {electionId} = req.params;
     const tx = await contract.deleteElection(electionId);

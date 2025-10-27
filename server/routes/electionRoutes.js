@@ -13,6 +13,11 @@ import {
 
 const router = express.Router();
 
+router.get("/test", (req, res) => {
+  console.log("Test route hit");
+  res.json({ success: true, message: "Test route working" });
+});
+
 router.get("/elections", getAllElections);
 router.get("/elections/:id", getElectionById);
 router.get("/elections/:id/candidates", getAllCandidates);
