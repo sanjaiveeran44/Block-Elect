@@ -14,45 +14,49 @@ const AdminHero = () => {
   const [elections, setElections] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchElection = async () =>{
-      try{
-          setLoading(true);
-          const response = await axios.get("http://localhost:5000/api/elections")
-          setElections(response.data)
-      }
-      catch(error){
-          console.log(error)
-      }
-      finally{
-          setLoading(false);
-      }
-  }
-  useEffect(
-    () =>{
-        fetchElection();
+  const API_URL = "http://localhost:5000/api/elections";
+
+  const fetchElection = async () => {
+    try {
+      console.log('hello from react')
+      setLoading(true);
+      const response = await axios.get(API_URL);
+      console.log(response.data);
+      setElections(response.data.data);
+    } catch (error) {
+      console.error("Error fetching elections:", error);
+    } finally {
+      setLoading(false);
     }
-  )
+  };
+
+  useEffect(() => {
+    fetchElection();
+  }, []);
 
   const handleView = (electionId) => {
     console.log("View clicked for election:", electionId);
   };
 
-  const handleRemove = async(electionId) => {
-    await axios.delete("http://localhost:5000/api/elections/" + electionId);
-    fetchElection();
+  const handleRemove = async (electionId) => {
+    try {
+      await axios.delete(`${API_URL}/${electionId}`);
+      fetchElection();
+    } catch (error) {
+      console.error("Error deleting election:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:5000/api/elections", newElection)
-    .then((response) => {
-        console.log(response.data)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-    setNewElection({ title: "", description: "", startDate: "", endDate: "" });
-    setShowForm(false);
+    try {
+      await axios.post(API_URL, newElection);
+      setNewElection({ title: "", description: "", startDate: "", endDate: "" });
+      setShowForm(false);
+      fetchElection();
+    } catch (error) {
+      console.error("Error creating election:", error);
+    }
   };
 
   return (
@@ -72,9 +76,7 @@ const AdminHero = () => {
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan="5" className="no-data">
-                Loading...
-              </td>
+              <td colSpan="5" className="no-data">Loading...</td>
             </tr>
           ) : elections && elections.length > 0 ? (
             elections.map((election, idx) => (
@@ -82,23 +84,19 @@ const AdminHero = () => {
                 <td>{election.title}</td>
                 <td>{election.startDate}</td>
                 <td>{election.endDate}</td>
-                <td
-                  className={
-                    election.active ? "status-active" : "status-ended"
-                  }
-                >
+                <td className={election.active ? "status-active" : "status-ended"}>
                   {election.active ? "Active" : "Ended"}
                 </td>
                 <td className="action-buttons">
                   <button
                     className="view-btn"
-                    onClick={() => handleView(election.id)}
+                    onClick={() => handleView(election._id || election.id)}
                   >
                     <FaEye /> View
                   </button>
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemove(election.id)}
+                    onClick={() => handleRemove(election._id || election.id)}
                   >
                     <FaTrash />
                   </button>
@@ -107,9 +105,7 @@ const AdminHero = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="no-data">
-                No elections found.
-              </td>
+              <td colSpan="5" className="no-data">No elections found.</td>
             </tr>
           )}
         </tbody>
@@ -163,9 +159,7 @@ const AdminHero = () => {
             />
           </div>
           <div className="form-buttons">
-            <button type="submit" className="submit-btn">
-              Submit
-            </button>
+            <button type="submit" className="submit-btn">Submit</button>
             <button
               type="button"
               className="cancel-btn"
