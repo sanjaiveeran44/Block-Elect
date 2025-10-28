@@ -40,7 +40,8 @@ const AdminHero = () => {
 
   const handleRemove = async (electionId) => {
     try {
-      await axios.delete(`${API_URL}/${electionId}`);
+      console.log("ele id",electionId);
+      await axios.delete(`${API_URL}?id=${electionId}`);
       fetchElection();
     } catch (error) {
       console.error("Error deleting election:", error);
@@ -96,7 +97,7 @@ const AdminHero = () => {
                   </button>
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemove(election._id || election.id)}
+                    onClick={() => handleRemove(election._id|| election.id)}
                   >
                     <FaTrash />
                   </button>

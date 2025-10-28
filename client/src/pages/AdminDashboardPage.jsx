@@ -9,23 +9,6 @@ function AdminDashboard() {
     console.log("Logout clicked");
   };
 
-  const sampleElections = [
-  {
-    id: 1,
-    title: "Student Council Election",
-    startDate: "2025-10-10",
-    endDate: "2025-10-20",
-    active: true,
-  },
-  {
-    id: 2,
-    title: "Tech Lead Selection",
-    startDate: "2025-09-01",
-    endDate: "2025-09-05",
-    active: false,
-  },
-];
-
   const handleView = (electionId) => {
     console.log("View clicked for election:", electionId);
   };
@@ -42,10 +25,6 @@ function AdminDashboard() {
     <div>
         <AdminHeader adminAddress={adminAddress} onLogout={handleLogout} />
         <AdminHero
-        elections={sampleElections}
-        onView={handleView}
-        onRemove={handleRemove}
-        onCreate={handleCreate}
       />
     </div>
   )
