@@ -22,7 +22,6 @@ export const getAllElections = async (req, res) => {
     
     console.log('hello');
     const elections = await contract.getAllElections();
-    console.log(elections);
   
     const parsedElections = elections.map(election => ({
       id: election.id.toString(),
@@ -31,6 +30,8 @@ export const getAllElections = async (req, res) => {
       active: election.active,
       candidateCount: election.candidateCount.toString()
     }));
+
+    console.log(parsedElections);
 
     return res.status(200).json({
       success: true, 

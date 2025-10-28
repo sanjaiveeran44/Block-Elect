@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import electionRoute from "./routes/electionRoutes.js";
+import { provider } from "./config/contract.js";
 
 dotenv.config();
 
@@ -27,8 +28,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Contract Address: ${process.env.CONTRACT_ADDRESS}`);
   console.log(`RPC URL: ${process.env.RPC_URL}`);
+
+  console.log("RPC:", process.env.RPC_URL);
+  console.log("Contract Address:", process.env.CONTRACT_ADDRESS);
+  console.log("Code at address:", await provider.getCode(process.env.CONTRACT_ADDRESS));
+
+  //0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+
 });
