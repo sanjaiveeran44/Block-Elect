@@ -20,7 +20,6 @@ const parseCandidate = (candidate) =>{
 export const getAllElections = async (req, res) => {
   try {
     
-    console.log('hello');
     const elections = await contract.getAllElections();
   
     const parsedElections = elections.map(election => ({
@@ -166,8 +165,9 @@ export const getVotersForCandidate = async (req, res) => {
 
 export const deleteElection = async (req,res) =>{
   try{
-    const {electionId} = req.params;
-    const tx = await contract.deleteElection(electionId);
+    const id = req.query.id;
+    console.log("electionId",id);
+    const tx = await contract.deleteElection(id);
     const receipt = await tx.wait();
     res.json({success: true, message: "Election deleted", data: {txHash: receipt.transactionHash}});
   }catch(error){

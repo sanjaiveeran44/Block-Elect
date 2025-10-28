@@ -29,6 +29,6 @@ router.post("/elections/:id/candidates", addCandidate);
 router.put("/elections/:id/start", startElection);
 router.put("/elections/:id/end", endElection);
 
-router.delete("/elections/:id", deleteElection);
+router.delete("/elections/", deleteElection);
 
 export default router;
