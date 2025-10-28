@@ -31,6 +31,8 @@ contract VotingSystem {
 
         
         mapping(uint256 => address[]) candidateVoters;
+
+        bool deleted;
     }
 
     mapping(uint256 => Election) private elections;
@@ -67,10 +69,10 @@ contract VotingSystem {
         e.title = _title;
         e.description = _description;
         e.useWhitelist = _useWhitelist;
+        e.deleted = false;
         emit ElectionCreated(electionCount, _title);
         return electionCount;
     }
-
     function addCandidate(uint256 _electionId, string memory _name)
         external
         onlyAdmin
@@ -129,6 +131,40 @@ contract VotingSystem {
         return (c.id, c.name, c.voteCount);
     }
 
+    struct ElectionView {
+        uint256 id;
+        string title;
+        string description;
+        bool active;
+        uint256 candidateCount;
+    }
+
+    function getAllElections() external view returns (ElectionView[] memory) {
+        ElectionView[] memory allElections = new ElectionView[](electionCount);
+
+        uint256 j = 0;
+
+        for (uint256 i = 1; i <= electionCount; i++) {
+
+            if(!elections[i].deleted){
+                continue;
+            }
+
+            Election storage e = elections[i];
+            allElections[j++] = ElectionView({
+                id: e.id,
+                title: e.title,
+                description: e.description,
+                active: e.active,
+                candidateCount: e.candidateCount
+            });
+        }
+
+        return allElections;
+    }
+
+
+
     function getElection(uint256 _electionId)
         external
         view
@@ -166,7 +202,14 @@ contract VotingSystem {
     }
 
     function deleteElection(uint256 _electionId) external onlyAdmin electionExists(_electionId) {
-        delete elections[_electionId];
+        elections[_electionId].deleted = true;
+        electionCount--;
         emit ElectionDeleted(_electionId);
     }
+
+    function getElectionCount() external view returns (uint256) {
+        return electionCount;
+    }
 }
+
+
