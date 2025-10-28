@@ -146,7 +146,7 @@ contract VotingSystem {
 
         for (uint256 i = 1; i <= electionCount; i++) {
 
-            if(!elections[i].deleted){
+            if(elections[i].deleted){
                 continue;
             }
 
