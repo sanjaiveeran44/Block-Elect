@@ -22,9 +22,7 @@ contract VotingSystem {
         bool active;
         uint256 candidateCount;
         mapping(uint256 => Candidate) candidates;
-        uint256[] candidateIds;
-
-     
+        uint256[] candidateIds;     
         mapping(address => bool) hasVoted;
         mapping(address => bool) whitelist;
         bool useWhitelist;
@@ -32,9 +30,12 @@ contract VotingSystem {
         
         mapping(uint256 => address[]) candidateVoters;
 
-        bool deleted;
+        bool exists;
     }
 
+    uint256 ids = 1;
+
+    uint256[] public electionIds;
     mapping(uint256 => Election) private elections;
 
     
@@ -53,7 +54,7 @@ contract VotingSystem {
     }
 
     modifier electionExists(uint256 _electionId) {
-        require(_electionId > 0 && _electionId <= electionCount, "Election does not exist");
+        require(elections[_electionId].exists == true, "Election does not exist");
         _;
     }
 
@@ -69,7 +70,8 @@ contract VotingSystem {
         e.title = _title;
         e.description = _description;
         e.useWhitelist = _useWhitelist;
-        e.deleted = false;
+        e.exists = true;
+        electionIds.push(electionCount);
         emit ElectionCreated(electionCount, _title);
         return electionCount;
     }
@@ -131,49 +133,50 @@ contract VotingSystem {
         return (c.id, c.name, c.voteCount);
     }
 
-    struct ElectionView {
+        struct ElectionView {
         uint256 id;
         string title;
         string description;
         bool active;
         uint256 candidateCount;
+        bool useWhitelist;
     }
 
     function getAllElections() external view returns (ElectionView[] memory) {
-        ElectionView[] memory allElections = new ElectionView[](electionCount);
-
-        uint256 j = 0;
-
-        for (uint256 i = 1; i <= electionCount; i++) {
-
-            if(elections[i].deleted){
-                continue;
-            }
-
-            Election storage e = elections[i];
-            allElections[j++] = ElectionView({
+        uint256 len = electionIds.length;
+        ElectionView[] memory list = new ElectionView[](len);
+        for (uint256 i = 0; i < len; i++) {
+            Election storage e = elections[electionIds[i]];
+            list[i] = ElectionView({
                 id: e.id,
                 title: e.title,
                 description: e.description,
                 active: e.active,
-                candidateCount: e.candidateCount
+                candidateCount: e.candidateCount,
+                useWhitelist: e.useWhitelist
             });
         }
-
-        return allElections;
+        return list;
     }
-
 
 
     function getElection(uint256 _electionId)
         external
         view
         electionExists(_electionId)
-        returns (uint256, string memory, string memory, bool, uint256)
+        returns (ElectionView memory)
     {
         Election storage e = elections[_electionId];
-        return (e.id, e.title, e.description, e.active, e.candidateCount);
+        return ElectionView({
+            id: e.id,
+            title: e.title,
+            description: e.description,
+            active: e.active,
+            candidateCount: e.candidateCount,
+            useWhitelist: e.useWhitelist
+        });
     }
+
 
    
     function getAllCandidates(uint256 _electionId)
@@ -190,7 +193,6 @@ contract VotingSystem {
         return result;
     }
 
-    
     function getVotersForCandidate(uint256 _electionId, uint256 _candidateId)
         external
         view
@@ -202,9 +204,16 @@ contract VotingSystem {
     }
 
     function deleteElection(uint256 _electionId) external onlyAdmin electionExists(_electionId) {
-        elections[_electionId].deleted = true;
-        electionCount--;
-        emit ElectionDeleted(_electionId);
+
+        elections[_electionId].exists = false;
+        uint256 len = electionIds.length;
+        for (uint i = 0; i < len; i++) {
+            if (electionIds[i] == _electionId) {
+                electionIds[i] = electionIds[len - 1];
+                electionIds.pop();
+                break;
+            }
+        }
     }
 
     function getElectionCount() external view returns (uint256) {
