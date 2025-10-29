@@ -155,3 +155,80 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+.start-button{
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  
+}
+.start-button:hover{
+  background: #15803d;
+}
+
+.candidate-section {
+  margin-top: 15px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.candidate-section h5 {
+  color: #1976d2;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.candidate-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.candidate-row input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+}
+
+.add-candidate-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s;
+}
+
+.add-candidate-btn:hover {
+  background: #15803d;
+}
+
+.remove-candidate-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.remove-candidate-btn:hover {
+  background: #dc2626;
+}
+
