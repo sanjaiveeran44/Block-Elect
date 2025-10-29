@@ -51,14 +51,16 @@ const AdminHero = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(API_URL, newElection);
+      const response = await axios.post(API_URL, newElection);
+      console.log('Election created:', response.data);
       setNewElection({ title: "", description: "", startDate: "", endDate: "" });
       setShowForm(false);
       fetchElection();
     } catch (error) {
-      console.error("Error creating election:", error);
+      console.error('Error creating election:', error);
     }
   };
+
 
   return (
     <section className="admin-hero">
@@ -164,7 +166,10 @@ const AdminHero = () => {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setNewElection({ title: "", description: "", startDate: "", endDate: "" });
+              }}
             >
               Cancel
             </button>
