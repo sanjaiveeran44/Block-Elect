@@ -65,22 +65,26 @@ export const getElectionById = async (req, res) => {
 }
 
 export const createElection = async (req, res) =>{
-  const {title, description, useWhitelist} = req.body;
+  const {title, description} = req.body;
+  console.log(title, description);
 
   try{
-    const transaction = await contract.createElection(title, description, useWhitelist);
+    const transaction = await contract.createElection(title, description, true);
     await transaction.wait();
+    console.log("transaction",transaction);
 
-    let electionId = null;
-    for(const log of transaction.logs){
-      const parsedLog = contract.interface.parseLog(log);
+    // let electionId = null;
+    // for(const log of transaction.logs){
+    //   const parsedLog = contract.interface.parseLog(log);
 
-      if(parsedLog.name === "ElectionCreated"){
-        electionId = parsedLog.args.electionId.toString();
-      }
-    }
+    //   if(parsedLog.name === "ElectionCreated"){
+    //     electionId = parsedLog.args.electionId.toString();
+    //   }
+    // }
 
-    return res.status(200).json({success: true, message: "Election created successfully", data:{electionId}});
+    // console.log("electionId",electionId)
+
+    return res.status(200).json({success: true, message: "Election created successfully"});
   }catch(error){
     return res.status(500).json({success :false, message: error.message});
   }
